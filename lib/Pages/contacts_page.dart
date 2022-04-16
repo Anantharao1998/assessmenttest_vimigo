@@ -28,6 +28,10 @@ class _ContactsPageState extends State<ContactsPage> {
   Future<void> getNames() async {
     debugPrint("Name List extraction initiated.");
 
+    _contacts.sort(
+      (a, b) => a['user'].compareTo(b['user']),
+    );
+
     _contacts
         .map(
           (e) => nameList.add(e["user"]),
@@ -63,13 +67,20 @@ class _ContactsPageState extends State<ContactsPage> {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                debugPrint(nameList.toString());
                 showSearch(
                     context: context,
                     delegate: MyCustomDelegate(
                       searchResults: nameList,
                     ));
               },
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _contacts = _contacts.reversed.toList();
+                });
+              },
+              icon: Icon(Icons.sort_by_alpha),
             )
           ],
         ),
