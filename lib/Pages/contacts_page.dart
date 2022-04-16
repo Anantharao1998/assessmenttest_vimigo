@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:assessmenttest_vimigo/Components/addContactBox.dart';
 import 'package:assessmenttest_vimigo/Components/searchDelegate.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -200,6 +201,7 @@ class _ContactsPageState extends State<ContactsPage> {
           child: InkWell(
             onTap: () {
               debugPrint("Add User clicked !!!");
+              showDialog(context: context, builder: (context) => addContact());
             },
             child: Container(
                 color: Color(0xFF08D9D6),
