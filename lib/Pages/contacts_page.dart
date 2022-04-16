@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:assessmenttest_vimigo/Components/addContactBox.dart';
 import 'package:assessmenttest_vimigo/Components/searchDelegate.dart';
+import 'package:assessmenttest_vimigo/Pages/contact_details.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,6 +73,7 @@ class _ContactsPageState extends State<ContactsPage> {
                     context: context,
                     delegate: MyCustomDelegate(
                       searchResults: nameList,
+                      contacts: _contacts,
                     ));
               },
             ),
@@ -98,97 +100,111 @@ class _ContactsPageState extends State<ContactsPage> {
                   ),
                 );
                 if (_contacts.isNotEmpty) {
-                  return Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 40, left: 10, right: 10),
-                        child: Card(
-                          color: Color(0xFFFFF4F4F4),
-                          elevation: 5.0,
-                          child: Container(
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          child: Row(
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailsPage(
+                              name: _contacts[index]['user'],
+                              phoneNum: _contacts[index]["phone"],
+                              checkIn: formattedDate),
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding:
+                              EdgeInsets.only(top: 40, left: 10, right: 10),
+                          child: Card(
+                            color: Color(0xFFFFF4F4F4),
+                            elevation: 5.0,
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: SizedBox(
+                                      height: 50,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "Phone :",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  " ${_contacts[index]["phone"]}",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                              child: Row(
                                             children: [
                                               Text(
-                                                "Phone :",
+                                                "Check-In :",
                                                 style: TextStyle(
                                                   color: Colors.grey,
                                                 ),
                                               ),
                                               Text(
-                                                " ${_contacts[index]["phone"]}",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                "${formattedDate}",
                                               ),
                                             ],
-                                          ),
-                                        ),
-                                        Container(
-                                            child: Row(
-                                          children: [
-                                            Text(
-                                              "Check-In :",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Text(
-                                              "${formattedDate}",
-                                            ),
-                                          ],
-                                        ))
-                                      ],
+                                          ))
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Container(
-                          constraints: BoxConstraints(minWidth: 50),
-                          alignment: Alignment.centerLeft,
-                          height: 50,
-                          margin: EdgeInsets.fromLTRB(25, 10, 100, 0),
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF08D9D6),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Container(
+                            constraints: BoxConstraints(minWidth: 50),
+                            alignment: Alignment.centerLeft,
+                            height: 50,
+                            margin: EdgeInsets.fromLTRB(25, 10, 100, 0),
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            decoration: BoxDecoration(
+                              color: Color(0xFF08D9D6),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "${_contacts[index]['user']}",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
+                            child: Text(
+                              "${_contacts[index]['user']}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 }
                 {

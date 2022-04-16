@@ -1,8 +1,10 @@
+import 'package:assessmenttest_vimigo/Pages/contact_details.dart';
 import 'package:flutter/material.dart';
 
 class MyCustomDelegate extends SearchDelegate {
-  MyCustomDelegate({required this.searchResults});
+  MyCustomDelegate({required this.searchResults, required this.contacts});
   List<String> searchResults;
+  List contacts;
 
   @override
   List<Widget>? buildActions(BuildContext context) => [
@@ -51,6 +53,18 @@ class MyCustomDelegate extends SearchDelegate {
             onTap: () {
               query = suggestion;
               FocusScope.of(context).unfocus();
+              close(context, null);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: ((context) => DetailsPage(
+                        name: suggestions[index],
+                        phoneNum: contacts[index]["phone"],
+                        checkIn: contacts[index]["check-in"],
+                        needFormat: true,
+                      )),
+                ),
+              );
             },
           );
         });
