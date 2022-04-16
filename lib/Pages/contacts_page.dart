@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'package:assessmenttest_vimigo/Components/searchDelegate.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:searchfield/searchfield.dart';
+import 'package:flutter/services.dart';
 
 class ContactsPage extends StatefulWidget {
   const ContactsPage({Key? key}) : super(key: key);
@@ -9,49 +12,80 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
-  List contacts = [
-    {
-      "user": "John Doe El Disousha",
-      "phone": "0123456789",
-      "check-in": "2020-06-30 16:10:05"
-    },
-    {
-      "user": "John Cena",
-      "phone": "0123434789",
-      "check-in": "2020-02-30 10:10:05"
-    }
-  ];
+  List _contacts = [];
+  List<String> nameList = [];
+  // Reads dataset from local JSON file "assets/contacts.json".
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/contacts.json');
+    final data = await json.decode(response);
+    setState(() {
+      _contacts = data;
+      getNames();
+    });
+  }
+
+  // Extracts username from the list of contacts information
+  Future<void> getNames() async {
+    debugPrint("Name List extraction initiated.");
+
+    _contacts
+        .map(
+          (e) => nameList.add(e["user"]),
+        )
+        .toList();
+  }
+
+  @override
+  void initState() {
+    readJson();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // To remove the keyboard when user clicks away from the keyboard.
       onTap: (() {
         FocusScope.of(context).unfocus();
       }),
       child: Scaffold(
+        // SearchBar for the user to search by name.
         appBar: AppBar(
           backgroundColor: Color(0xFF08D9D6),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: 200,
-                child: SearchField(
-                  hint: "Search by Name.",
-                  onTap: (value) => debugPrint(value.toString()),
-                  suggestions: contacts
-                      .map((e) => SearchFieldListItem<String>(e["user"]))
-                      .toList(),
-                ),
-              ),
-            ],
+          title: Text(
+            "Search by Name",
+            style: TextStyle(
+              color: Colors.black38,
+              fontSize: 18,
+            ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                debugPrint(nameList.toString());
+                showSearch(
+                    context: context,
+                    delegate: MyCustomDelegate(
+                      searchResults: nameList,
+                    ));
+              },
+            )
+          ],
         ),
+
         body: Center(
           child: ListView.builder(
-              itemCount: contacts.length,
+              itemCount: _contacts.length,
               itemBuilder: (context, index) {
-                String date = contacts[index]["check-in"];
-                if (contacts.isNotEmpty) {
+                // converts datetime to "d MMM yyyy hh:mm a" format.
+                final formatDate = new DateFormat("d MMM yyyy hh:mm a");
+                String formattedDate = formatDate.format(
+                  DateTime.parse(
+                    _contacts[index]["check-in"],
+                  ),
+                );
+                if (_contacts.isNotEmpty) {
                   return Stack(
                     children: [
                       Container(
@@ -87,7 +121,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                                 ),
                                               ),
                                               Text(
-                                                " ${contacts[index]["phone"]}",
+                                                " ${_contacts[index]["phone"]}",
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -106,7 +140,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                               ),
                                             ),
                                             Text(
-                                              "${date}",
+                                              "${formattedDate}",
                                             ),
                                           ],
                                         ))
@@ -134,11 +168,10 @@ class _ContactsPageState extends State<ContactsPage> {
                             ),
                           ),
                           child: Text(
-                            "${contacts[index]['user']}",
+                            "${_contacts[index]['user']}",
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
                         ),
