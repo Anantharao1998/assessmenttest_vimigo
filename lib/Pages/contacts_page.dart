@@ -44,10 +44,10 @@ class _ContactsPageState extends State<ContactsPage> {
         (a, b) => a.user.toLowerCase().compareTo(b.user.toLowerCase()),
       );
     });
-
-    _contacts
+    nameList.clear();
+    newList
         .map(
-          (e) => nameList.add(e["user"]),
+          (e) => nameList.add(e.user),
         )
         .toList();
   }
