@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Returns HomePage
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: ContactsPage(),
     );
   }

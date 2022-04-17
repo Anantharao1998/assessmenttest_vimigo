@@ -41,7 +41,7 @@ class _ContactsPageState extends State<ContactsPage> {
   Future<void> getNames() async {
     setState(() {
       newList.sort(
-        (a, b) => a.user.compareTo(b.user),
+        (a, b) => a.user.toLowerCase().compareTo(b.user.toLowerCase()),
       );
     });
 
@@ -240,6 +240,16 @@ class _ContactsPageState extends State<ContactsPage> {
                 setState(() {
                   newList = newContacts;
                   getNames();
+
+                  final snackBar = SnackBar(
+                    content: const Text('Contact successfully added !!!'),
+                    action: SnackBarAction(
+                      label: '',
+                      onPressed: () {},
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 });
               }
             },
