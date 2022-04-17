@@ -1,8 +1,10 @@
+import 'package:assessmenttest_vimigo/Components/inputConstructor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class addContact extends StatelessWidget {
-  addContact({Key? key}) : super(key: key);
+  addContact({required this.oldList, Key? key}) : super(key: key);
+  List oldList;
 
   TextEditingController name = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
@@ -50,6 +52,7 @@ class addContact extends StatelessWidget {
                       textTheme: CupertinoTextThemeData(
                         dateTimePickerTextStyle: TextStyle(
                           fontSize: 12,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -78,9 +81,9 @@ class addContact extends StatelessWidget {
       ),
     );
   }
-}
 
-void onSubmit(String name, String num, String dateTime, context) {
-  Navigator.of(context).pop();
-  debugPrint("$name $num $dateTime");
+  void onSubmit(String name, String num, String dateTime, context) {
+    oldList.add(InputData(user: name, phone: num, checkin: dateTime));
+    Navigator.of(context).pop(oldList);
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:assessmenttest_vimigo/Components/addContactBox.dart';
+import 'package:assessmenttest_vimigo/Components/inputConstructor.dart';
 import 'package:assessmenttest_vimigo/Components/searchDelegate.dart';
 import 'package:assessmenttest_vimigo/Pages/contact_details.dart';
 import 'package:intl/intl.dart';
@@ -16,23 +17,33 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   List _contacts = [];
   List<String> nameList = [];
+  List<InputData> newList = [];
   // Reads dataset from local JSON file "assets/contacts.json".
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('assets/contacts.json');
     final data = await json.decode(response);
     setState(() {
       _contacts = data;
-      getNames();
     });
+
+    _contacts
+        .map(
+          (e) => newList.add(
+            InputData(
+                user: e["user"], phone: e["phone"], checkin: e["check-in"]),
+          ),
+        )
+        .toList();
+    getNames();
   }
 
   // Extracts username from the list of contacts information
   Future<void> getNames() async {
-    debugPrint("Name List extraction initiated.");
-
-    _contacts.sort(
-      (a, b) => a['user'].compareTo(b['user']),
-    );
+    setState(() {
+      newList.sort(
+        (a, b) => a.user.compareTo(b.user),
+      );
+    });
 
     _contacts
         .map(
@@ -80,7 +91,7 @@ class _ContactsPageState extends State<ContactsPage> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  _contacts = _contacts.reversed.toList();
+                  newList = newList.reversed.toList();
                 });
               },
               icon: Icon(Icons.sort_by_alpha),
@@ -90,24 +101,24 @@ class _ContactsPageState extends State<ContactsPage> {
 
         body: Center(
           child: ListView.builder(
-              itemCount: _contacts.length,
+              itemCount: newList.length,
               itemBuilder: (context, index) {
                 // converts datetime to "d MMM yyyy hh:mm a" format.
                 final formatDate = new DateFormat("d MMM yyyy hh:mm a");
                 String formattedDate = formatDate.format(
                   DateTime.parse(
-                    _contacts[index]["check-in"],
+                    newList[index].checkin,
                   ),
                 );
-                if (_contacts.isNotEmpty) {
+                if (newList.isNotEmpty) {
                   return InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailsPage(
-                              name: _contacts[index]['user'],
-                              phoneNum: _contacts[index]["phone"],
+                              name: newList[index].user,
+                              phoneNum: newList[index].phone,
                               checkIn: formattedDate),
                         ),
                       );
@@ -148,7 +159,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  " ${_contacts[index]["phone"]}",
+                                                  " ${newList[index].phone}",
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
@@ -195,7 +206,7 @@ class _ContactsPageState extends State<ContactsPage> {
                               ),
                             ),
                             child: Text(
-                              "${_contacts[index]['user']}",
+                              "${newList[index].user}",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -213,11 +224,24 @@ class _ContactsPageState extends State<ContactsPage> {
                 }
               }),
         ),
+        floatingActionButton: Container(
+            // Implement Sprite animation here
+            ),
         bottomNavigationBar: BottomAppBar(
           child: InkWell(
-            onTap: () {
-              debugPrint("Add User clicked !!!");
-              showDialog(context: context, builder: (context) => addContact());
+            onTap: () async {
+              final newContacts = await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return addContact(oldList: newList);
+                  });
+
+              if (newContacts.isNotEmpty) {
+                setState(() {
+                  newList = newContacts;
+                  getNames();
+                });
+              }
             },
             child: Container(
                 color: Color(0xFF08D9D6),
