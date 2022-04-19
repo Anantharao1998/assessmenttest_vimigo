@@ -8,7 +8,7 @@ class addContact extends StatelessWidget {
 
   TextEditingController name = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
-  String dateTime = "";
+  String dateTime = DateTime.now().toString();
 
   @override
   Widget build(BuildContext context) {

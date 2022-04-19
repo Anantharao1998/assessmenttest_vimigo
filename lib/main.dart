@@ -10,9 +10,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Returns HomePage
-    return const MaterialApp(
+    return MaterialApp(
+      routes: {
+        // When navigating to the "contactsPage" route, build the ContactsPage widget.
+        'contactsPage': (context) => const ContactsPage(),
+      },
+      initialRoute: "contactsPage",
       debugShowCheckedModeBanner: false,
-      home: ContactsPage(),
     );
   }
 }

@@ -42,6 +42,7 @@ class MyCustomDelegate extends SearchDelegate {
         })
         .toList()
         .cast<String>();
+
     // Returns username suggestions for the user's view.
     return ListView.builder(
         itemCount: suggestions.length,
@@ -59,8 +60,8 @@ class MyCustomDelegate extends SearchDelegate {
                 MaterialPageRoute(
                   builder: ((context) => DetailsPage(
                         name: suggestions[index],
-                        phoneNum: contacts[index]["phone"],
-                        checkIn: contacts[index]["check-in"],
+                        phoneNum: contacts[index].phone,
+                        checkIn: contacts[index].checkin,
                         needFormat: true,
                       )),
                 ),
