@@ -1,0 +1,34 @@
+[
+    {
+        "imagePath": "assets/images/intro1.png",
+        "description": "This is the list of contacts. User can search or add contacts here."
+    },
+    {
+        "imagePath": "assets/images/intro2.png",
+        "description": "Viewing contact details"
+    },
+    {
+        "imagePath": "assets/images/intro3.png",
+        "description": "Viewing contact details"
+    },
+    {
+        "imagePath": "assets/images/intro4.png",
+        "description": "Search user by name"
+    },
+    {
+        "imagePath": "assets/images/intro5.png",
+        "description": "Search user by name"
+    },
+    {
+        "imagePath": "assets/images/intro6.png",
+        "description": "Sorting the list"
+    },
+    {
+        "imagePath": "assets/images/intro7.png",
+        "description": "Adding new contact"
+    },
+    {
+        "imagePath": "assets/images/intro8.png",
+        "description": "Adding new contact"
+    }
+]
